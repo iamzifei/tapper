@@ -56,7 +56,7 @@ Requires macOS 14 Sonoma or later. Universal binary (Apple Silicon + Intel).
 
 **Permissions.** None for the glove. Presentation mode needs *Accessibility* so it can stop clicks from reaching apps; Tapper asks the first time you turn it on. Tapper never records your screen or keystrokes.
 
-> If macOS says it can't verify the developer, right-click Tapper in Applications and choose **Open**. You only need to do this once.
+Signed with a Developer ID and notarized by Apple.
 
 ## Build from source
 
