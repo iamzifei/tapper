@@ -75,3 +75,13 @@ One transparent, click-through window per display sits above everything. Inside 
 ## License
 
 [MIT](LICENSE) © 2026 Zifei Gong · made by [James](https://jamesai.dev)
+
+## More Mac apps by James
+
+| App | What it does | GitHub |
+|---|---|---|
+| [Candela](https://getcandela.app) | Every display control macOS hides | [iamzifei/Candela](https://github.com/iamzifei/Candela) |
+| [ClipStack](https://getclipstack.app) | Clipboard history in the menu bar | [iamzifei/clipstack](https://github.com/iamzifei/clipstack) |
+| [AudioSwitch](https://audioswitch.dev) | Audio device switching from the menu bar | [iamzifei/audioswitch](https://github.com/iamzifei/audioswitch) |
+| [Inkstone](https://inkslab.app) | Notes that stay your own files | [iamzifei/inkstone](https://github.com/iamzifei/inkstone) |
+| [Veil](https://jamesai.dev/veil/) | Keeps the window you're working in sharp and softly blurs everything behind it. Free, MIT. | [iamzifei/veil](https://github.com/iamzifei/veil) |
