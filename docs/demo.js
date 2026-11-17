@@ -53,6 +53,8 @@
   };
 
   const m = () => MOODS[st.mood];
+  // Localised strings come from i18n.js (loaded first); fall back to English names if it is absent.
+  const T = (k, fb) => (window.TapperI18n ? window.TapperI18n.t(k) : fb);
   const sc = () => BASE * m().scale;                       // px per sprite pixel
   const ropeLen = () => (SPR.cuffY - SPR.tipY) * sc() + m().stick; // fingertip -> far end of stick
 
@@ -251,16 +253,19 @@
   const moodOut = document.getElementById('moodOut');
   function applyMood() {
     st.mood = +moodInput.value - 1;
-    moodOut.textContent = `${moodInput.value}/5 · ${m().name}`;
+    moodOut.textContent = `${moodInput.value}/5 · ${T('mood.' + moodInput.value, m().name)}`;
     layoutRig(); resetMass();
   }
   moodInput.addEventListener('input', applyMood);
 
   const soundBtn = document.getElementById('sound');
+  function renderSoundState() {
+    soundBtn.querySelector('.state').textContent = st.sound ? T('sound.on', 'On') : T('sound.off', 'Off');
+  }
   soundBtn.addEventListener('click', () => {
     st.sound = !st.sound;
     soundBtn.setAttribute('aria-pressed', String(st.sound));
-    soundBtn.querySelector('.state').textContent = st.sound ? 'On' : 'Off';
+    renderSoundState();
     if (st.sound) {
       // AudioContext must be created from a user gesture.
       audio = audio || new (window.AudioContext || window.webkitAudioContext)();
@@ -279,6 +284,9 @@
 
   gloveImg.src = SPRITES[st.style];
   applyMood();
+  renderSoundState();
+  // Re-render the strings this script owns whenever the language changes.
+  document.addEventListener('tapperlang', () => { applyMood(); renderSoundState(); });
   requestAnimationFrame(t => { st.last = t; frame(t); });
 
   // Test hook (also handy for debugging in the console).

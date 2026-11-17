@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/assets/icon.png" width="128" alt="Tapper icon"></p>
 
-<h1 align="center">Tapper</h1>
+<h1 align="center">Tapper <sub>敲黑板</sub></h1>
 
 <p align="center">
   Turn your mouse pointer into a cartoon glove on a long stick.<br>

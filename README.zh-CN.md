@@ -1,9 +1,9 @@
-<p align="center"><img src="docs/assets/icon.png" width="128" alt="Tapper 图标"></p>
+<p align="center"><img src="docs/assets/icon.png" width="128" alt="敲黑板图标"></p>
 
-<h1 align="center">Tapper</h1>
+<h1 align="center">敲黑板（Tapper）</h1>
 
 <p align="center">
-  把鼠标指针变成一只插在长杆上的卡通白手套。<br>
+  把鼠标指针变成一只插在长杆上的卡通白手套。App 名叫 Tapper。<br>
   演示、共享屏幕、录教程时，大家一眼就知道你在指哪儿。<br>
   免费、开源的 macOS 菜单栏小工具。
 </p>
@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://jamesai.dev/tapper/"><img src="docs/assets/tapper-demo.gif" width="800" alt="Tapper 演示"></a><br>
+  <a href="https://jamesai.dev/tapper/"><img src="docs/assets/tapper-demo.gif" width="800" alt="敲黑板演示"></a><br>
   <sub>▶ <a href="docs/assets/tapper-demo.mp4">高清视频（MP4）</a> · 或到 <a href="https://jamesai.dev/tapper/">官网</a> 上直接动手试</sub>
 </p>
 

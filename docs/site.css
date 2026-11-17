@@ -272,3 +272,50 @@ footer nav { display: flex; gap: 20px; }
   .burst { animation-name: burst-calm; }
   @keyframes burst-calm { 0% { opacity: 1; } 100% { opacity: 0; } }
 }
+
+/* ---------- Language switcher ---------- */
+.lang { display: inline-flex; border: 3px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--card); flex: none; }
+.lang button { appearance: none; border: 0; background: transparent; color: var(--ink); font: 700 .85rem/1 var(--font-body); padding: 8px 11px; cursor: pointer; min-width: 38px; }
+.lang button + button { border-left: 2px solid var(--line); }
+.lang button[aria-pressed="true"] { background: var(--yellow); color: #16110A; }
+.lang button:focus-visible { outline-offset: -4px; }
+@media (max-width: 720px) {
+  .site-header .wrap { gap: 10px; }
+  .nav { gap: 10px; }
+  .lang button { padding: 7px 9px; min-width: 34px; }
+}
+
+/* ---------- Chinese typography ----------
+   Latin glyphs keep the site fonts; CJK falls through to system faces (PingFang / Noto / YaHei / JhengHei).
+   Archivo Black has no CJK glyphs, so headings use real heavy weights from the CJK fallback and we
+   forbid synthetic bold for the Latin face. */
+:lang(zh-Hans) {
+  --cjk: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+}
+:lang(zh-Hant) {
+  --cjk: "PingFang TC", "Noto Sans TC", "Source Han Sans TC", "Microsoft JhengHei", sans-serif;
+}
+:lang(zh-Hans), :lang(zh-Hant) {
+  --font-body: "DM Sans", var(--cjk);
+  --font-display: "Archivo Black", var(--cjk);
+  font-synthesis-weight: none;
+  line-height: 1.7;
+}
+:lang(zh-Hans) body, :lang(zh-Hant) body { line-height: 1.7; }
+:lang(zh-Hans) h1, :lang(zh-Hans) h2, :lang(zh-Hans) h3, :lang(zh-Hans) .brand, :lang(zh-Hans) .slide-title,
+:lang(zh-Hant) h1, :lang(zh-Hant) h2, :lang(zh-Hant) h3, :lang(zh-Hant) .brand, :lang(zh-Hant) .slide-title { font-weight: 900; }
+:lang(zh-Hans) h1, :lang(zh-Hant) h1 { letter-spacing: 0; line-height: 1.12; font-size: clamp(2.6rem, 8vw, 5rem); }
+:lang(zh-Hans) h2, :lang(zh-Hant) h2 { line-height: 1.2; }
+:lang(zh-Hans) .eyebrow, :lang(zh-Hant) .eyebrow,
+:lang(zh-Hans) th, :lang(zh-Hant) th,
+:lang(zh-Hans) .ctl > legend, :lang(zh-Hans) .ctl > .lbl,
+:lang(zh-Hant) .ctl > legend, :lang(zh-Hant) .ctl > .lbl,
+:lang(zh-Hans) .slide-kicker, :lang(zh-Hant) .slide-kicker { letter-spacing: .04em; }
+:lang(zh-Hans) .slide-list li, :lang(zh-Hant) .slide-list li { line-height: 1.35; }
+:lang(zh-Hans) .slide-title, :lang(zh-Hant) .slide-title { line-height: 1.2; }
+.lang button[lang^="zh"] { font-family: var(--cjk, "PingFang SC", sans-serif); }
+.lang button[lang="zh-Hant"] { --cjk: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+.lang button[lang="zh-Hans"] { --cjk: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif; }
+.hint { width: max-content; white-space: normal; text-align: center; max-width: calc(100% - 24px); text-wrap: balance; }
+:lang(zh-Hans) .eyebrow, :lang(zh-Hant) .eyebrow, :lang(zh-Hans) th, :lang(zh-Hant) th,
+:lang(zh-Hans) .ctl > legend, :lang(zh-Hans) .ctl > .lbl, :lang(zh-Hant) .ctl > legend, :lang(zh-Hant) .ctl > .lbl { text-transform: none; }
