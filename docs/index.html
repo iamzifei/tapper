@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tapper — point like you mean it</title>
+<meta name="description" content="Tapper is a free, open-source macOS menu-bar app that turns your mouse pointer into a cartoon glove on a long stick. Perfect for demos, screen shares and tutorials. Try it live.">
+<link rel="canonical" href="https://jamesai.dev/tapper/">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+<meta name="theme-color" content="#FF8A1F">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tapper">
+<meta property="og:title" content="Tapper — point like you mean it">
+<meta property="og:description" content="A cartoon glove on a long stick replaces your Mac pointer. Free, open source, made for demos and screen shares.">
+<meta property="og:url" content="https://jamesai.dev/tapper/">
+<meta property="og:image" content="https://jamesai.dev/tapper/assets/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tapper — point like you mean it">
+<meta name="twitter:description" content="A cartoon glove on a long stick replaces your Mac pointer. Free and open source.">
+<meta name="twitter:image" content="https://jamesai.dev/tapper/assets/poster.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Tapper home"><img src="assets/icon.png" alt="" width="40" height="40">Tapper</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#shortcuts">Shortcuts</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn--ghost" href="https://github.com/iamzifei/tapper">GitHub</a>
+      <a class="btn" href="https://github.com/iamzifei/tapper/releases/latest/download/Tapper.dmg">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============ HERO + LIVE DEMO ============ -->
+  <div class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">Free · Open source · macOS</span>
+        <h1>Point like <span class="hl">you mean it.</span></h1>
+        <p class="lede">Tapper swaps your pointer for a cartoon glove on a long, wobbly stick. Nobody watching your demo, call or recording will ever ask “wait, where are you pointing?” again.</p>
+        <div class="cta-row">
+          <a class="btn btn--big" href="https://github.com/iamzifei/tapper/releases/latest/download/Tapper.dmg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+            Download for Mac
+          </a>
+          <a class="btn btn--big btn--ghost" href="https://github.com/iamzifei/tapper">View on GitHub</a>
+        </div>
+        <p class="fine">Requires macOS 14 or later · Universal binary · MIT licensed</p>
+      </div>
+
+      <!-- The stage: real cursor hidden, glove follows the pointer -->
+      <div class="stage" id="stage" role="img" aria-label="Interactive demo: move your pointer over this slide to see the Tapper glove follow it, and click to poke.">
+        <div class="win-bar"><i></i><i></i><i></i><span>Q4 review — slides</span></div>
+        <div class="slide">
+          <p class="slide-kicker">Q4 REVIEW</p>
+          <h2 class="slide-title">Signups doubled. Here’s why.</h2>
+          <div class="slide-body">
+            <ul class="slide-list">
+              <li>New onboarding cut drop-off in half</li>
+              <li>Referral loop went live in week 3</li>
+              <li>Support tickets stayed flat</li>
+            </ul>
+            <div class="chart" aria-hidden="true"><b></b><b></b><b></b><b></b><b></b><b></b><em>this one!</em></div>
+          </div>
+        </div>
+        <div class="stage-layer bursts" id="bursts" aria-hidden="true"></div>
+        <div class="rig" id="rig" aria-hidden="true">
+          <svg class="stick" id="stickSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+          <img id="gloveImg" src="assets/glove-tiny.png" alt="" width="80" height="118" draggable="false">
+        </div>
+        <div class="hint" id="hint"><span class="mouse">Move your mouse here, then click</span><span class="touch">Tap or drag on the slide</span></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <fieldset class="ctl">
+          <legend>Hand</legend>
+          <div class="styles" id="styles" role="radiogroup" aria-label="Hand style">
+            <button type="button" class="style-btn" role="radio" aria-checked="true" data-style="tiny"><img src="assets/glove-tiny.png" alt="" width="37" height="54">Tiny hand</button>
+            <button type="button" class="style-btn" role="radio" aria-checked="false" data-style="paw"><img src="assets/glove-paw.png" alt="" width="37" height="54">Cat paw</button>
+            <button type="button" class="style-btn" role="radio" aria-checked="false" data-style="middle"><img src="assets/glove-middle.png" alt="" width="37" height="54">Middle child</button>
+          </div>
+        </fieldset>
+
+        <div class="ctl mood">
+          <label class="lbl" for="mood">Pointer mood</label>
+          <input type="range" id="mood" min="1" max="5" step="1" value="3" aria-describedby="moodOut">
+          <div class="ends"><span>Shy finger</span><span>In your face</span></div>
+          <output id="moodOut" for="mood" aria-live="polite">3/5 · Clear signal</output>
+        </div>
+
+        <fieldset class="ctl">
+          <legend>Stick colour</legend>
+          <div class="swatches" id="swatches" role="radiogroup" aria-label="Stick colour">
+            <button type="button" class="sw" role="radio" aria-checked="true"  data-color="0" aria-label="Black"  title="Black"  style="--c:#000000"></button>
+            <button type="button" class="sw" role="radio" aria-checked="false" data-color="1" aria-label="White"  title="White"  style="--c:#FFFFFF"></button>
+            <button type="button" class="sw" role="radio" aria-checked="false" data-color="2" aria-label="Orange" title="Orange" style="--c:#FF9500"></button>
+            <button type="button" class="sw" role="radio" aria-checked="false" data-color="3" aria-label="Red"    title="Red"    style="--c:#FF3B30"></button>
+            <button type="button" class="sw" role="radio" aria-checked="false" data-color="4" aria-label="Pink"   title="Pink"   style="--c:#FF2D55"></button>
+            <button type="button" class="sw" role="radio" aria-checked="false" data-color="5" aria-label="Purple" title="Purple" style="--c:#AF52DE"></button>
+            <button type="button" class="sw" role="radio" aria-checked="false" data-color="6" aria-label="Blue"   title="Blue"   style="--c:#007AFF"></button>
+            <button type="button" class="sw" role="radio" aria-checked="false" data-color="7" aria-label="Green"  title="Green"  style="--c:#34C759"></button>
+          </div>
+        </fieldset>
+
+        <div class="ctl">
+          <span class="lbl">Knock sound</span>
+          <button type="button" class="toggle" id="sound" aria-pressed="false"><span class="knob" aria-hidden="true"></span>Sound: <span class="state">Off</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ VIDEO ============ -->
+  <section id="video">
+    <div class="wrap">
+      <h2>See it on a real Mac.</h2>
+      <p class="sec-lede">Same glove, same spring, drawn over every window and every display.</p>
+      <div class="video-frame">
+        <video src="assets/tapper-demo.mp4" poster="assets/poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording of Tapper on macOS: the glove follows the pointer and pokes on click"></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section id="features" class="alt">
+    <div class="wrap">
+      <h2>Impossible to miss. On purpose.</h2>
+      <p class="sec-lede">Everything you need to make your pointer the loudest thing on screen, and nothing you don’t.</p>
+      <div class="grid">
+        <article class="card"><h3>A glove, not an arrow</h3><p>The system arrow is hidden on every display. The glove follows your pointer, and its fingertip is exactly where you’re aiming.</p></article>
+        <article class="card"><h3>A stick with a mind of its own</h3><p>It hangs toward the bottom-right, fades out at the far end, and swings on a spring. Move fast and it lags and wobbles.</p></article>
+        <article class="card"><h3>Three hands</h3><p>Tiny hand with a pointing finger, Cat paw with pink beans, or Middle child, for the cheeky ones.</p></article>
+        <article class="card"><h3>Click to poke</h3><p>Every click jabs forward with comic impact lines. Click fast and the hits get bigger, all the way to a starburst.</p></article>
+        <article class="card"><h3>Pointer mood</h3><p>Five steps from “Shy finger” to “In your face”: size, stick length and how hard it pokes, all in one slider.</p></article>
+        <article class="card"><h3>Make it yours</h3><p>Pick a stick colour, switch click animation on or off, and turn on a knock sound with its own volume.</p></article>
+        <article class="card"><h3>Presentation mode</h3><p>Clicks only poke, they never reach the app underneath. The keyboard keeps working, so slides advance as usual.</p></article>
+        <article class="card"><h3>Multi-display, recording-ready</h3><p>Works across every display and shows up in screen shares and recordings, because it’s drawn on screen.</p></article>
+        <article class="card"><h3>Scriptable</h3><p>A <code>tapper://</code> URL scheme lets Shortcuts, Raycast, Stream Deck or a shell script drive it.</p></article>
+        <article class="card"><h3>Native and light</h3><p>Written in Swift, ships as a universal binary for Apple silicon and Intel, and runs on macOS 14 or later.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHORTCUTS ============ -->
+  <section id="shortcuts">
+    <div class="wrap">
+      <h2>Two shortcuts. That’s the whole job.</h2>
+      <p class="sec-lede">Global hotkeys, so they work no matter which app is in front.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Action</th><th scope="col">Shortcut</th><th scope="col">What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Show / Hide pointer</td><td><kbd>⌃</kbd> <kbd>⌥</kbd> <kbd>P</kbd></td><td>Swaps the glove in or out. Your normal arrow comes straight back.</td></tr>
+            <tr><td>Presentation mode</td><td><kbd>⌃</kbd> <kbd>⌥</kbd> <kbd>T</kbd></td><td>Clicks only poke. Handy for slides. Needs Accessibility permission.</td></tr>
+            <tr><td>Poke</td><td>Click</td><td>Jabs the glove and bursts impact lines at the fingertip. Click fast for bigger hits.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRESENTATION MODE ============ -->
+  <section id="presentation" class="alt">
+    <div class="wrap split">
+      <div>
+        <h2>Present without accidents.</h2>
+        <p>Ever clicked a link mid-demo just to make a point? In Presentation mode, clicks stop at the glove. They poke, they burst, and nothing underneath gets activated.</p>
+        <ul>
+          <li>Your keyboard still works, so arrow keys keep flipping slides.</li>
+          <li>Toggle it from anywhere with <kbd>⌃</kbd> <kbd>⌥</kbd> <kbd>T</kbd>.</li>
+          <li>macOS needs to grant Accessibility permission the first time you use it.</li>
+        </ul>
+      </div>
+      <div class="pm-card">
+        <h3>How a click behaves</h3>
+        <ol>
+          <li><strong>Normal:</strong> the glove pokes and the click lands on the app.</li>
+          <li><strong>Presentation mode:</strong> the glove pokes and the click goes nowhere.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ URL SCHEME ============ -->
+  <section id="automation">
+    <div class="wrap">
+      <h2>Drive it from anywhere.</h2>
+      <p class="sec-lede">Tapper answers to <code>tapper://</code> links. Use them from Shortcuts, Raycast, Stream Deck, a script, or a link in your slide notes.</p>
+<pre><code><span class="c"># Show, hide or toggle the glove</span>
+open <span class="k">"tapper://show"</span>
+open <span class="k">"tapper://hide"</span>
+open <span class="k">"tapper://toggle"</span>
+
+<span class="c"># Give it a poke, or flip Presentation mode</span>
+open <span class="k">"tapper://poke"</span>
+open <span class="k">"tapper://presentation"</span>
+
+<span class="c"># Set everything in one go</span>
+open <span class="k">"tapper://set?style=paw&amp;mood=3&amp;color=2&amp;sound=off"</span></code></pre>
+      <p class="muted"><code>set</code> accepts <code>style</code>, <code>mood</code>, <code>color</code> (0 to 7, in the same order as the colour menu: Black, White, Orange, Red, Pink, Purple, Blue, Green) and <code>sound</code>.</p>
+    </div>
+  </section>
+
+  <!-- ============ INSTALL ============ -->
+  <section id="install" class="alt">
+    <div class="wrap">
+      <h2>Install in a minute.</h2>
+      <p class="sec-lede">Needs macOS 14 (Sonoma) or later. Works on Apple silicon and Intel.</p>
+      <ol class="install">
+        <li><div><strong>Download</strong> <a href="https://github.com/iamzifei/tapper/releases/latest/download/Tapper.dmg">Tapper.dmg</a> and drag Tapper into Applications.</div></li>
+        <li><div><strong>Open it.</strong> Tapper lives in the menu bar. <span class="muted">First launch: if macOS says it can’t verify the developer, right-click → Open.</span></div></li>
+        <li><div><strong>Turn the glove on.</strong> On first launch the glove is off. Choose “Show pointer” from the menu-bar icon, or press <kbd>⌃</kbd> <kbd>⌥</kbd> <kbd>P</kbd>.</div></li>
+      </ol>
+      <div class="cta-row" style="justify-content:flex-start">
+        <a class="btn btn--big" href="https://github.com/iamzifei/tapper/releases/latest/download/Tapper.dmg">Download for Mac</a>
+        <a class="btn btn--big btn--ghost" href="https://github.com/iamzifei/tapper">Source on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq">
+    <div class="wrap" style="max-width:800px">
+      <h2>Questions, answered.</h2>
+      <details><summary>Is it really free?</summary><p>Yes. Tapper is open source under the MIT licence: free to download, use, share and modify. The code is on GitHub.</p></details>
+      <details><summary>What permissions does it need?</summary><p>Presentation mode needs Accessibility permission, because that is how macOS lets an app stop clicks from reaching other apps. macOS asks the first time you turn it on. If you never use Presentation mode, you never need to grant it.</p></details>
+      <details><summary>Does it record anything?</summary><p>No. Tapper draws a glove and reacts to your clicks so it can poke. It doesn’t record your screen, your keystrokes or what you click on. It’s open source, so you can read exactly what it does.</p></details>
+      <details><summary>Will viewers see the glove in screen shares and recordings?</summary><p>Yes. The glove is drawn on screen, so it appears in screen shares and recordings, across all your displays.</p></details>
+      <details><summary>Which Macs does it run on?</summary><p>Any Mac running macOS 14 or later. It’s a native Swift app and a universal binary, so it runs natively on both Apple silicon and Intel.</p></details>
+    </div>
+  </section>
+
+  <section class="final alt">
+    <div class="wrap">
+      <h2>Go on. Give them something to look at.</h2>
+      <div class="cta-row">
+        <a class="btn btn--big" href="https://github.com/iamzifei/tapper/releases/latest/download/Tapper.dmg">Download Tapper</a>
+        <a class="btn btn--big btn--ghost" href="#top">Try the demo again</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Made by James · <a href="https://jamesai.dev">jamesai.dev</a></span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/iamzifei/tapper/blob/main/LICENSE">MIT License</a>
+      <a href="https://github.com/iamzifei/tapper">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="demo.js" defer></script>
+</body>
+</html>
