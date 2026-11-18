@@ -65,7 +65,7 @@ git clone https://github.com/iamzifei/tapper && cd tapper
 scripts/build.sh
 ```
 
-Swift 5.9+，没有第三方依赖。
+Swift 5.9+，唯一的第三方依赖是自动更新用的 [Sparkle](https://sparkle-project.org)。
 
 ## 许可
 

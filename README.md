@@ -66,7 +66,7 @@ scripts/build.sh            # builds, ad-hoc signs, installs to /Applications
 scripts/build.sh release    # Developer ID signing + DMG (maintainers)
 ```
 
-Swift 5.9+, no third-party dependencies. The glove is vector art drawn with Core Graphics (`Sources/Tapper/Art.swift`). `tools/main.swift` renders the app icon and the website sprites from the same code.
+Swift 5.9+. The only dependency is [Sparkle](https://sparkle-project.org) for automatic updates. The glove is vector art drawn with Core Graphics (`Sources/Tapper/Art.swift`). `tools/main.swift` renders the app icon and the website sprites from the same code.
 
 ## How it works
 
