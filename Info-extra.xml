@@ -3,3 +3,7 @@
     <key>CFBundleURLName</key><string>dev.jamesai.tapper</string>
     <key>CFBundleURLSchemes</key><array><string>tapper</string></array>
   </dict></array>
+  <key>SUFeedURL</key><string>https://raw.githubusercontent.com/iamzifei/tapper/main/appcast.xml</string>
+  <key>SUPublicEDKey</key><string>CHSkSUupddRglHt3C2quzHtit8LMB29BMI44/O9aItg=</string>
+  <key>SUEnableAutomaticChecks</key><true/>
+  <key>SUScheduledCheckInterval</key><integer>86400</integer>

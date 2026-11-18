@@ -56,7 +56,7 @@ open -g "tapper://set?style=paw&mood=3&color=6&sound=off"
 
 **权限**：手套本身不需要任何权限。演示模式要拦住点击，需要「辅助功能」权限，第一次打开时会提示你授权。Tapper 不录屏，也不记录按键。
 
-已用 Developer ID 签名，并通过 Apple 公证。
+已用 Developer ID 签名，并通过 Apple 公证。更新会自动安装（Sparkle）。
 
 ## 从源码构建
 

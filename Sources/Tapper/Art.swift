@@ -10,7 +10,7 @@ import AppKit
 
 enum HandStyle: Int, CaseIterable {
     case tinyHand, catPaw, middleChild
-    var title: String { ["Tiny hand", "Cat paw", "Middle child"][rawValue] }
+    var title: String { L(["Tiny hand", "Cat paw", "Middle child"][rawValue]) }
 }
 
 enum Art {

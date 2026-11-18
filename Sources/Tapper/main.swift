@@ -403,14 +403,14 @@ enum HotKeys {
 /// "Pointer mood" slider with five detents and end labels, like the original.
 func moodItem(value: Int, target: AnyObject, action: Selector) -> NSMenuItem {
     let view = NSView(frame: NSRect(x: 0, y: 0, width: 250, height: 62))
-    let title = NSTextField(labelWithString: "Pointer mood")
+    let title = NSTextField(labelWithString: L("Pointer mood"))
     title.font = .menuFont(ofSize: 13); title.textColor = .secondaryLabelColor
     title.frame = NSRect(x: 14, y: 42, width: 200, height: 17)
     let slider = NSSlider(value: Double(value), minValue: 0, maxValue: 4, target: target, action: action)
     slider.numberOfTickMarks = 5
     slider.allowsTickMarkValuesOnly = true
     slider.frame = NSRect(x: 14, y: 16, width: 222, height: 24)
-    let l = NSTextField(labelWithString: "Shy finger"), r = NSTextField(labelWithString: "In your face")
+    let l = NSTextField(labelWithString: L("Shy finger")), r = NSTextField(labelWithString: L("In your face"))
     for f in [l, r] { f.font = .systemFont(ofSize: 10); f.textColor = .secondaryLabelColor }
     l.frame = NSRect(x: 14, y: 0, width: 100, height: 14)
     r.alignment = .right; r.frame = NSRect(x: 136, y: 0, width: 100, height: 14)
@@ -467,6 +467,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var tapSource: CFRunLoopSource?
     private var displayTimer: Timer?
     private let s = Settings.shared
+    /// Sparkle auto-updater, created once for the app's lifetime.
+    private let updater = Updater()
+    private let onboarding = OnboardingController()
 
     func applicationDidFinishLaunching(_ note: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -498,6 +501,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                                                      forEventClass: AEEventClass(kInternetEventClass),
                                                      andEventID: AEEventID(kAEGetURL))
         apply()
+
+        // First launch (or first launch after the guide changed): show the welcome guide once.
+        if Onboarding.shouldShow {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in self?.showWelcomeGuide() }
+        }
     }
 
     @objc private func handleURL(_ event: NSAppleEventDescriptor, reply: NSAppleEventDescriptor) {
@@ -609,6 +617,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         s.mood = v; rig.apply()
     }
 
+    @objc func checkForUpdates() { updater.checkForUpdates() }
+
+    /// Language submenu: persists the choice and re-renders open UI. The menu itself is
+    /// rebuilt on every open (menuNeedsUpdate), so it picks the new language up immediately.
+    @objc func setLanguage(_ sender: NSMenuItem) {
+        guard let raw = sender.representedObject as? String, let lang = AppLanguage(rawValue: raw) else { return }
+        LanguageStore.shared.set(lang)
+    }
+
+    /// Opens the welcome guide (also shown automatically once, see applicationDidFinishLaunching).
+    @objc func showWelcomeGuide() {
+        onboarding.show(title: { L("onboarding.tapper.window") }, pages: TapperGuide.pages, ctaTitle: { TapperGuide.ctaTitle }) { [weak self] in
+            guard let self, !self.s.enabled else { return }
+            self.toggleEnabled()   // the guide's call to action: bring the glove out
+        }
+    }
     @objc func setStyle(_ sender: NSMenuItem) { s.style = HandStyle(rawValue: sender.tag) ?? .tinyHand; rig.apply() }
     @objc func setColor(_ sender: NSMenuItem) { s.colorIndex = sender.tag; rig.apply() }
     @objc func toggleAnimate() { s.animateOnClick.toggle() }
@@ -626,13 +650,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             if let t = eventTap { CGEvent.tapEnable(tap: t, enable: false) }
             if let src = tapSource { CFRunLoopRemoveSource(CFRunLoopGetMain(), src, .commonModes) }
             eventTap = nil; tapSource = nil; presentation = false
-            toast.show("Presentation mode off", on: screen)
+            toast.show(L("Presentation mode off"), on: screen)
             return
         }
         // An event tap that drops events needs Accessibility permission.
         let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         guard AXIsProcessTrustedWithOptions(opts) else {
-            toast.show("Allow Tapper in Settings → Privacy & Security → Accessibility", on: screen)
+            toast.show(L("Allow Tapper in Settings → Privacy & Security → Accessibility"), on: screen)
             return
         }
         if !s.enabled { s.enabled = true; apply() }
@@ -647,16 +671,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         CFRunLoopAddSource(CFRunLoopGetMain(), tapSource, .commonModes)
         CGEvent.tapEnable(tap: tap, enable: true)
         presentation = true
-        toast.show("Presentation mode on · clicks only poke · ⌃⌥T to exit", on: screen)
+        toast.show(L("Presentation mode on · clicks only poke · ⌃⌥T to exit"), on: screen)
     }
 
     // Rebuilt on every open so it reflects current state. Layout mirrors the original.
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
-        let show = NSMenuItem(title: s.enabled ? "Hide pointer" : "Show pointer", action: #selector(toggleEnabled), keyEquivalent: "p")
+        let show = NSMenuItem(title: s.enabled ? L("Hide pointer") : L("Show pointer"), action: #selector(toggleEnabled), keyEquivalent: "p")
         show.keyEquivalentModifierMask = [.control, .option]
         menu.addItem(show)
-        let pres = NSMenuItem(title: "Presentation mode", action: #selector(togglePresentation), keyEquivalent: "t")
+        let pres = NSMenuItem(title: L("Presentation mode"), action: #selector(togglePresentation), keyEquivalent: "t")
         pres.keyEquivalentModifierMask = [.control, .option]
         pres.state = presentation ? .on : .off
         menu.addItem(pres)
@@ -673,32 +697,53 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let colors = NSMenu()
         for (i, (name, c)) in stickColors.enumerated() {
-            let it = NSMenuItem(title: name, action: #selector(setColor(_:)), keyEquivalent: "")
+            let it = NSMenuItem(title: L(name), action: #selector(setColor(_:)), keyEquivalent: "")
             it.tag = i; it.image = swatch(c); it.target = self
             it.state = s.colorIndex == i ? .on : .off
             colors.addItem(it)
         }
-        let colorItem = NSMenuItem(title: "Color", action: nil, keyEquivalent: "")
+        let colorItem = NSMenuItem(title: L("Color"), action: nil, keyEquivalent: "")
         colorItem.submenu = colors
         menu.addItem(colorItem)
         menu.addItem(.separator())
 
-        let anim = NSMenuItem(title: "Animate on click", action: #selector(toggleAnimate), keyEquivalent: "")
+        let anim = NSMenuItem(title: L("Animate on click"), action: #selector(toggleAnimate), keyEquivalent: "")
         anim.state = s.animateOnClick ? .on : .off
         menu.addItem(anim)
-        let snd = NSMenuItem(title: "Knock sound", action: #selector(toggleSound), keyEquivalent: "")
+        let snd = NSMenuItem(title: L("Knock sound"), action: #selector(toggleSound), keyEquivalent: "")
         snd.state = s.soundOn ? .on : .off
         menu.addItem(snd)
-        menu.addItem(sliderItem("Volume", value: s.volume, target: self, action: #selector(volumeChanged(_:))))
+        menu.addItem(sliderItem(L("Volume"), value: s.volume, target: self, action: #selector(volumeChanged(_:))))
         menu.addItem(.separator())
-        let login = NSMenuItem(title: "Launch at login", action: #selector(toggleLogin), keyEquivalent: "")
+        let login = NSMenuItem(title: L("Launch at login"), action: #selector(toggleLogin), keyEquivalent: "")
         login.state = SMAppService.mainApp.status == .enabled ? .on : .off
         menu.addItem(login)
-        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        let langMenu = NSMenu()
+        for lang in AppLanguage.allCases {
+            let it = NSMenuItem(title: lang.nativeName, action: #selector(setLanguage(_:)), keyEquivalent: "")
+            it.representedObject = lang.rawValue; it.target = self
+            it.state = LanguageStore.shared.selection == lang ? .on : .off
+            langMenu.addItem(it)
+            if lang == .system { langMenu.addItem(.separator()) }
+        }
+        let langItem = NSMenuItem(title: L("Language"), action: nil, keyEquivalent: "")
+        langItem.submenu = langMenu
+        menu.addItem(langItem)
+        menu.addItem(NSMenuItem(title: L("Welcome Guide…"), action: #selector(showWelcomeGuide), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: L("Check for Updates…"), action: #selector(checkForUpdates), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: L("Quit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         for it in menu.items where it.action != nil && it.action != #selector(NSApplication.terminate(_:)) { it.target = self }
     }
 }
 
+// Developer aid: `Tapper --render-onboarding <outDir> <lang> <prefix>` renders the guide pages to PNGs and exits.
+if let i = CommandLine.arguments.firstIndex(of: "--render-onboarding"), CommandLine.arguments.count > i + 3 {
+    let a = CommandLine.arguments
+    OnboardingRender.run(outDir: a[i + 1], lang: a[i + 2], prefix: a[i + 3], pages: TapperGuide.pages, cta: { TapperGuide.ctaTitle })
+    exit(0)
+}
+
+_ = LanguageStore.shared   // apply the saved language override before any UI is built
 let app = NSApplication.shared
 let delegate = AppDelegate()
 app.delegate = delegate
