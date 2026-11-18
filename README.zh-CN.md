@@ -49,6 +49,14 @@ open -g "tapper://set?style=paw&mood=3&color=6&sound=off"
 
 ## 安装
 
+用 [Homebrew](https://brew.sh)：
+
+```sh
+brew install --cask iamzifei/tap/tapper
+```
+
+或者手动安装：
+
 1. 下载 [Tapper.dmg](https://github.com/iamzifei/tapper/releases/latest/download/Tapper.dmg)，打开后把 **Tapper** 拖进「应用程序」。
 2. 打开它，点菜单栏里的小手，选 **Show pointer**（或按 ⌃⌥P）。
 
